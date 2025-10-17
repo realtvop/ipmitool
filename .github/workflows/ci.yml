@@ -12,7 +12,7 @@ jobs:
   linux:
     strategy:
       matrix:
-        os: [ ubuntu-18.04, ubuntu-20.04, ubuntu-22.04 ]
+        os: [ ubuntu-20.04, ubuntu-22.04, ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
     - name: install dependencies
@@ -36,7 +36,7 @@ jobs:
           libreadline-dev \
           libfreeipmi-dev \
           libusb-dev
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: bootstrap
       run: ./bootstrap
     - name: configure
@@ -53,17 +53,27 @@ jobs:
       run: make check
     - name: make distcheck
       run: make distcheck
+    - name: upload artifacts
+      uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: ipmitool-linux-${{ matrix.os }}
+        path: |
+          src/ipmitool
+          src/ipmievd
+        if-no-files-found: warn
+        retention-days: 30
 
   macos:
     strategy:
       matrix:
-        os: [ macos-10.15, macos-11, macos-12 ]
+        os: [ macos-11, macos-12, macos-latest ]
     runs-on: ${{ matrix.os }}
 
     steps:
     - name: install dependencies
       run: brew install automake openssl libtool freeipmi wget
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: bootstrap
       run: ./bootstrap
     - name: configure
@@ -77,11 +87,21 @@ jobs:
       run: make check
     - name: make distcheck
       run: make distcheck
+    - name: upload artifacts
+      uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: ipmitool-macos-${{ matrix.os }}
+        path: |
+          src/ipmitool
+          src/ipmievd
+        if-no-files-found: warn
+        retention-days: 30
 
   windows:
     strategy:
       matrix:
-        os: [ windows-2025, windows-2022 ]
+        os: [ windows-2019, windows-2022, windows-latest ]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -103,7 +123,7 @@ jobs:
                 wget
         echo "C:/tools/cygwin/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
         echo "C:/tools/cygwin/usr/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: convert line ends
       # checkout action on Windows apparently converts line ends
       # so we have to convert them back because cygwin bash can't
@@ -114,8 +134,18 @@ jobs:
     - name: configure
       run: bash -c "./configure"
     - name: make
-      run: make
+      run: bash -c "make"
     - name: make check
-      run: make check
+      run: bash -c "make check"
     - name: make distcheck
-      run: make distcheck
+      run: bash -c "make distcheck"
+    - name: upload artifacts
+      uses: actions/upload-artifact@v3
+      if: success()
+      with:
+        name: ipmitool-windows-${{ matrix.os }}
+        path: |
+          src/ipmitool.exe
+          src/ipmievd.exe
+        if-no-files-found: warn
+        retention-days: 30
