@@ -134,11 +134,11 @@ jobs:
     - name: configure
       run: bash -c "./configure"
     - name: make
-      run: make
+      run: bash -c "make"
     - name: make check
-      run: make check
+      run: bash -c "make check"
     - name: make distcheck
-      run: make distcheck
+      run: bash -c "make distcheck"
     - name: upload artifacts
       uses: actions/upload-artifact@v3
       if: success()
