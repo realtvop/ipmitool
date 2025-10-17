@@ -61,6 +61,7 @@ jobs:
         path: |
           src/ipmitool
           src/ipmievd
+        if-no-files-found: warn
         retention-days: 30
 
   macos:
@@ -94,6 +95,7 @@ jobs:
         path: |
           src/ipmitool
           src/ipmievd
+        if-no-files-found: warn
         retention-days: 30
 
   windows:
@@ -145,4 +147,5 @@ jobs:
         path: |
           src/ipmitool.exe
           src/ipmievd.exe
+        if-no-files-found: warn
         retention-days: 30
