@@ -54,7 +54,7 @@ jobs:
     - name: make distcheck
       run: make distcheck
     - name: upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success()
       with:
         name: ipmitool-linux-${{ matrix.os }}
@@ -88,7 +88,7 @@ jobs:
     - name: make distcheck
       run: make distcheck
     - name: upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success()
       with:
         name: ipmitool-macos-${{ matrix.os }}
@@ -140,7 +140,7 @@ jobs:
     - name: make distcheck
       run: bash -c "make distcheck"
     - name: upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: success()
       with:
         name: ipmitool-windows-${{ matrix.os }}
